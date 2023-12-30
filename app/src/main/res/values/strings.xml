@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Test_in_kotlin</string>
+    <string name="login">Login</string>
+    <string name="registration">Registratie</string>
+    <string name="registrations">Registraties</string>
+    <string name="back_button">Back</string>
+    <string name="signup">SignUp</string>
+    <string name="home">Home</string>
+</resources>
