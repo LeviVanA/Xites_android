@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -87,15 +88,20 @@ fun SignUpScreen(toHome:()->Unit, modifier: Modifier, signUpViewModel: SignUpVie
             onValueChange = { confirmPassword = it},
             value = confirmPassword,
             onTrailingIconClick = { "" },
-
-            trailingIcon = {
-                if (isError)
-                    Icon(Icons.Filled.Warning,"error", tint = MaterialTheme.colorScheme.error)
-            },
             width = 175.dp,
             password = false)
         Spacer(modifier = Modifier.height(16.dp))
-
+        if(isError==true){
+        Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                TextButton(onClick = { isError=false }) {
+                    Text("Dismiss")
+                }
+            }
+        ) {
+            Text("confirm password isn't the same as password")
+        }}
 
         // Registration button
         Buttons(
@@ -113,6 +119,19 @@ fun SignUpScreen(toHome:()->Unit, modifier: Modifier, signUpViewModel: SignUpVie
                 // Handle registration logic
             }
         )
+        val errorMessage = signUpViewModel.errorState.collectAsState().value
+        errorMessage?.let {
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    TextButton(onClick = { signUpViewModel.updateErrorState(null) }) {
+                        Text("Dismiss")
+                    }
+                }
+            ) {
+                Text(it)
+            }
+        }
     }
 }
 

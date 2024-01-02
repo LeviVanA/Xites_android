@@ -1,5 +1,10 @@
 package com.example.test_in_kotlin.screens.Registration
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,12 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.navigation.NavHostController
 import com.example.test_in_kotlin.MainApplication
-import com.example.test_in_kotlin.data.transactions.Items
+import com.example.test_in_kotlin.data.transactions.api.Items
 import com.example.test_in_kotlin.data.transactions.TransactionModel
 import com.example.test_in_kotlin.data.transactions.TransactionRepository
-import com.example.test_in_kotlin.data.users.UserModel
+import com.example.test_in_kotlin.data.transactions.local.ConnectionState
+import com.example.test_in_kotlin.data.transactions.local.TransactionEntity
+import com.example.test_in_kotlin.data.transactions.local.checkIfAnyCached
+import com.example.test_in_kotlin.data.transactions.local.getCurrentConnectivityState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,17 +30,19 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
     private val _uiState = MutableStateFlow(RegistrationUIState())
     val uiState : StateFlow<RegistrationUIState> = _uiState.asStateFlow()
 
-    private val _projects = MutableLiveData<List<Items.ProjectItem>>(emptyList())
-    val projects : LiveData<List<Items.ProjectItem>> get() = _projects
 
-    private val _diensten = MutableLiveData<List<Items.DienstItem>>(emptyList())
-    val diensten : LiveData<List<Items.DienstItem>> get() = _diensten
+    private val _projects = mutableStateOf<List<Items.ProjectItem>>(emptyList())
+    val projects : MutableState<List<Items.ProjectItem>> = _projects
+
+    private val _diensten = mutableStateOf<List<Items.DienstItem>>(emptyList())
+    val diensten : MutableState<List<Items.DienstItem>> get() = _diensten
 
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState.asStateFlow()
 
-    fun sendLoad(toHome: () ->Unit) {
+    fun sendLoad(toHome: () ->Unit, ctx:Context) {
         viewModelScope.launch {
+
             try {
                 val transaction = TransactionModel(
                     dienst = uiState.value.dienst,
@@ -44,6 +54,8 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
                     teControleren = uiState.value.teControleren,
                     date = uiState.value.date
                 )
+                println(uiState.value.date)
+                println(transaction)
                 transactionsrepo.createtransaction(transaction)
                 toHome()
             }
@@ -70,6 +82,19 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
     }
     fun updateErrorState(errorMessage: String?) {
         _errorState.value = errorMessage
+    }
+    fun cacheCheck(ctx: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (ctx.getCurrentConnectivityState() != ConnectionState.Available || !checkIfAnyCached(
+                    transactionsrepo
+                )
+            ) {
+                Log.d("SVK_CACHE", "no cache or no network")
+                //Toast.makeText(ctx, "No network", Toast.LENGTH_LONG).show()
+                return@launch
+            }
+
+        }
     }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

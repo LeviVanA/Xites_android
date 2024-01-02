@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.test_in_kotlin.screens.Registration.RegistrationViewModel
 import java.util.Calendar
 import java.util.Date
 
@@ -42,8 +45,10 @@ import java.util.Date
 fun DatePick(modifier: Modifier,
              onValueChange: (String) -> Unit,
              value: String,
+             registrationViewModel: RegistrationViewModel= viewModel(factory = RegistrationViewModel.Factory)
              ) {
     val mContext = LocalContext.current
+    val RegistrationUIState = registrationViewModel.uiState.collectAsState()
 
     val mYear: Int
     val mMonth: Int
@@ -68,9 +73,10 @@ fun DatePick(modifier: Modifier,
             text = selectedDate
         }, mYear, mMonth, mDay
     )
-
+    val updatedUiState = RegistrationUIState.value.copy(date = text)
+    registrationViewModel.updateUiState(updatedUiState)
     TextField(
-        value = value,
+        value = text,
         onValueChange = onValueChange,
         placeholder = {
             Text(

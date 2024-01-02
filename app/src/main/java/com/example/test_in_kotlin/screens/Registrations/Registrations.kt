@@ -1,7 +1,5 @@
 package com.example.test_in_kotlin.screens.Registrations
 
-import android.content.ClipData
-import android.text.Spannable.Factory
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,11 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import com.example.test_in_kotlin.Screen
 import com.example.test_in_kotlin.components.CustomTextField
 import com.example.test_in_kotlin.components.TopB
-import com.example.test_in_kotlin.data.transactions.Item
+import com.example.test_in_kotlin.data.transactions.api.Item
 
 @Composable
 fun Registrations( modifier: Modifier, toHome: () -> Unit){
@@ -96,8 +91,9 @@ fun Table(modifier:Modifier, registrationsViewModel: RegistrationsViewModel = vi
         }
     }
 
-    val column1Weight = .3f // 30%
+    val column1Weight = .5f // 30%
     val column2Weight = .7f // 70%
+    val column3Weight = .5f
 
     LazyColumn(
         Modifier
@@ -123,18 +119,18 @@ fun Table(modifier:Modifier, registrationsViewModel: RegistrationsViewModel = vi
         }
         item {
             Row(Modifier.background(Color.Gray)) {
-                TableCell(text = "date", weight = column2Weight)
-                TableCell(text = "user", weight = column1Weight)
-                TableCell(text = "project", weight = column2Weight)
+                TableCell(text = "date", weight = column1Weight)
+                TableCell(text = "user", weight = column2Weight)
+                TableCell(text = "project", weight = column3Weight)
             }
         }
         if (tableData != null) {
             items(tableData.filter { it.second.contains(searchByUser, ignoreCase = true) }) {
-                val (id, text) = it
+                val (id, text, bedrijf) = it
                 Row(Modifier.fillMaxWidth()) {
-                    TableCell(text = id.toString(), weight = column2Weight)
-                    TableCell(text = text, weight = column1Weight)
+                    TableCell(text = id, weight = column1Weight)
                     TableCell(text = text, weight = column2Weight)
+                    TableCell(text = bedrijf, weight = column3Weight)
                 }
             }
         }

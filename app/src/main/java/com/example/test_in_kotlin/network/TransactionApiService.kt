@@ -1,15 +1,16 @@
 package com.example.test_in_kotlin.network
 
-import com.example.test_in_kotlin.data.transactions.DienstData
+import com.example.test_in_kotlin.data.transactions.api.DienstData
 import com.example.test_in_kotlin.data.transactions.GetTransaction
-import com.example.test_in_kotlin.data.transactions.ProjectData
-import com.example.test_in_kotlin.data.transactions.TranactionData
+import com.example.test_in_kotlin.data.transactions.api.ProjectData
+import com.example.test_in_kotlin.data.transactions.api.TranactionData
 import com.example.test_in_kotlin.data.transactions.TransactionModel
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 
@@ -31,7 +32,7 @@ interface TransactionApiService {
     suspend fun getprojects(): Response<ProjectData>
 
     @POST("api/transactions/")
-    suspend fun createtransaction(@Body transaction: TransactionModel,) : Response<GetTransaction>
+    suspend fun createtransaction(@Body transaction: TransactionModel,@Header("Authorization") authHeader : String) : Response<GetTransaction>//,@Header("Authorization") authHeader : String
 
 }
 

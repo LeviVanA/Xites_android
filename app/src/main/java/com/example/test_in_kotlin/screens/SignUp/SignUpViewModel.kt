@@ -18,20 +18,32 @@ class SignUpViewModel(private val userRepository: UserRepository) : ViewModel() 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState : StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+    private val _errorState = MutableStateFlow<String?>(null)
+    val errorState: StateFlow<String?> = _errorState.asStateFlow()
+
     fun updateUiState(newState: LoginUiState) {
         _uiState.value = newState
     }
     fun registerUser(toHome:()->Unit,) {
         viewModelScope.launch {
-            val user = UserModel(
-                name =uiState.value.username,
-                password = uiState.value.password
-            )
-            userRepository.register(user)
-            toHome()
+            try {
+                val user = UserModel(
+                    name = uiState.value.username,
+                    password = uiState.value.password
+                )
+                userRepository.register(user)
+                updateErrorState(null)
+                toHome()
+            }
+            catch(err:Exception){
+                _errorState.value = "An error occurred: ${err.message}"
+            }
         }
     }
 
+    fun updateErrorState(errorMessage: String?) {
+        _errorState.value = errorMessage
+    }
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

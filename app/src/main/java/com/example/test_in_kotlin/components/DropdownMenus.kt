@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.test_in_kotlin.data.transactions.Items
+import com.example.test_in_kotlin.data.transactions.api.Items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

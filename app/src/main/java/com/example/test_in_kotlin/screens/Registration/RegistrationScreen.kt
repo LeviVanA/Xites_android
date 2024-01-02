@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.example.test_in_kotlin.components.DatePick
 import com.example.test_in_kotlin.components.ExposedDMBox
 import com.example.test_in_kotlin.components.TopB
@@ -39,9 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.test_in_kotlin.components.Buttons
 import com.example.test_in_kotlin.components.CustomTextField
-import com.example.test_in_kotlin.data.transactions.Items
-import androidx.compose.runtime.collectAsState
-
+import com.example.test_in_kotlin.data.transactions.api.Items
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -51,6 +50,9 @@ fun RegistrationScreen(toHome: () -> Unit, modifier: Modifier, registrationViewM
     var projectsList by remember { mutableStateOf<List<Items.ProjectItem>?>(null) }
     var dienstenList by remember { mutableStateOf<List<Items.DienstItem>?>(null) }
 
+    val ctx = LocalContext.current
+
+    registrationViewModel.cacheCheck(ctx)
     LaunchedEffect(true) {
         registrationViewModel.fetchDienstenProjects()
     }
@@ -72,7 +74,8 @@ fun RegistrationScreen(toHome: () -> Unit, modifier: Modifier, registrationViewM
         DatePick(modifier = modifier.align(Alignment.CenterHorizontally),
             onValueChange = {updatedValue ->
             val updatedUiState = RegistrationUIState.value.copy(date = updatedValue)
-                registrationViewModel.updateUiState(updatedUiState)}, value = RegistrationUIState.value.date)
+                registrationViewModel.updateUiState(updatedUiState)},
+            value = RegistrationUIState.value.date)
         Row(modifier = modifier.align(Alignment.CenterHorizontally)) {
             ExposedDMBox(
                 exVarP = projectsList,
@@ -87,7 +90,7 @@ fun RegistrationScreen(toHome: () -> Unit, modifier: Modifier, registrationViewM
                 onValueChange = { updatedValue ->
                     val updatedUiState = RegistrationUIState.value.copy(dienst = updatedValue)
                     registrationViewModel.updateUiState(updatedUiState)},
-                value = RegistrationUIState.value.dienst,
+                value = RegistrationUIState.value.dienst
                 )
         }
         Row(modifier = modifier.align(Alignment.Start).padding(30.dp,0.dp,0.dp,0.dp)) {
@@ -128,21 +131,22 @@ fun RegistrationScreen(toHome: () -> Unit, modifier: Modifier, registrationViewM
         BasicCheckbox(modifier = modifier,onCheckedChange = {updatedValue ->
             val updatedUiState = RegistrationUIState.value.copy(teControleren = updatedValue)
             registrationViewModel.updateUiState(updatedUiState)},checked = RegistrationUIState.value.teControleren)
-
-        Buttons(text = "Opslaan",onClick = { registrationViewModel.sendLoad(toHome)})
-        val errorMessage = registrationViewModel.errorState.collectAsState().value
-        errorMessage?.let {
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                action = {
-                    TextButton(onClick = { registrationViewModel.updateErrorState(null) }) {
-                        Text("Dismiss")
+        Row {
+            Buttons(text = "Opslaan", onClick = { registrationViewModel.sendLoad(toHome, ctx) })
+            val errorMessage = registrationViewModel.errorState.collectAsState().value
+            errorMessage?.let {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    action = {
+                        TextButton(onClick = { registrationViewModel.updateErrorState(null) }) {
+                            Text("Dismiss")
+                        }
                     }
+
+
+                ) {
+                    Text(it)
                 }
-
-
-            ) {
-                Text(it)
             }
         }
 

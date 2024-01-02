@@ -1,11 +1,8 @@
 package com.example.test_in_kotlin.screens.Registrations
 
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.constraintlayout.solver.state.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,19 +11,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.test_in_kotlin.MainApplication
-import com.example.test_in_kotlin.data.transactions.Item
+import com.example.test_in_kotlin.data.transactions.api.Item
 import com.example.test_in_kotlin.data.transactions.TransactionRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RegistrationsViewModel(private val transactionsrepo:TransactionRepository) : ViewModel(){
     //private val registrationRepository = RegistrationRepository(api = retrofit.create(RegistrationApi::class.java))
 
     // Use mutableStateOf for ViewModel state
-    private val _registrations = MutableLiveData<List<Item>>(emptyList())
-    val registrations: LiveData<List<Item>> get() = _registrations
+    private val _registrations = mutableStateOf<List<Item>>(emptyList())
+    val registrations: MutableState<List<Item>> = _registrations
 
 
 
