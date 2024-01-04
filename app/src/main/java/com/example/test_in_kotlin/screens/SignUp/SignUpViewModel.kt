@@ -24,7 +24,7 @@ class SignUpViewModel(private val userRepository: UserRepository) : ViewModel() 
     fun updateUiState(newState: LoginUiState) {
         _uiState.value = newState
     }
-    fun registerUser(toHome:()->Unit,) {
+    fun registerUser(toHome: suspend () -> Unit,) {
         viewModelScope.launch {
             try {
                 val user = UserModel(
