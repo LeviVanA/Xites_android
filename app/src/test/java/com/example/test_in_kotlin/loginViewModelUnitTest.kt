@@ -52,6 +52,19 @@ class LoginViewModelUnitTest {
         Dispatchers.resetMain() // Reset the main dispatcher after the test
     }
     @Test
+    fun `loginUser should call login and toHome on success`() = runBlockingTest {
+        // Given
+        val toHomeCallback: () -> Unit = mock()
+
+        // When
+        loginViewModel.loginUser(toHomeCallback)
+
+        // Then
+        verify(userRepository).login(anyOrNull())
+        verify(toHomeCallback).invoke()
+        verifyNoMoreInteractions(userRepository, toHomeCallback)
+    }
+    @Test
     fun `registerUser should update error state on exception`() = runBlockingTest {
 
         // Given
