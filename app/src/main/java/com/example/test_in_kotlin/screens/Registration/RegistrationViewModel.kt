@@ -40,7 +40,7 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState.asStateFlow()
 
-    fun sendLoad(toHome: () ->Unit, ctx:Context) {
+    fun sendLoad(toHome: () ->Unit) {
         viewModelScope.launch {
 
             try {
@@ -89,8 +89,7 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
                     transactionsrepo
                 )
             ) {
-                Log.d("SVK_CACHE", "no cache or no network")
-                //Toast.makeText(ctx, "No network", Toast.LENGTH_LONG).show()
+                Log.d("Xites_CACHE", "no cache or no network")
                 return@launch
             }
 
@@ -100,7 +99,7 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
-                val transactionsRepository = application.transactionContainer.transactionRepository
+                val transactionsRepository = application.transactionContainer.offlineTransactionRepository
                 RegistrationViewModel( transactionsrepo = transactionsRepository)
             }
         }

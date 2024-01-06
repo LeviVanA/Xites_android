@@ -132,7 +132,7 @@ fun RegistrationScreen(toHome: () -> Unit, modifier: Modifier, registrationViewM
             val updatedUiState = RegistrationUIState.value.copy(teControleren = updatedValue)
             registrationViewModel.updateUiState(updatedUiState)},checked = RegistrationUIState.value.teControleren)
         Row {
-            Buttons(text = "Opslaan", onClick = { registrationViewModel.sendLoad(toHome, ctx) })
+            Buttons(text = "Opslaan", onClick = { registrationViewModel.sendLoad(toHome) })
             val errorMessage = registrationViewModel.errorState.collectAsState().value
             errorMessage?.let {
                 Snackbar(
