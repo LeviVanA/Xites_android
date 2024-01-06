@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.test_in_kotlin.components.CustomTextField
 import com.example.test_in_kotlin.components.TopB
-import com.example.test_in_kotlin.data.transactions.api.Item
+import com.example.test_in_kotlin.data.transactions.Item
 
 @Composable
 fun Registrations( modifier: Modifier, toHome: () -> Unit){

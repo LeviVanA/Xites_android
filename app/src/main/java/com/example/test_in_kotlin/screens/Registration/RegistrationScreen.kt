@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.test_in_kotlin.components.Buttons
 import com.example.test_in_kotlin.components.CustomTextField
-import com.example.test_in_kotlin.data.transactions.api.Items
+import com.example.test_in_kotlin.data.transactions.Items
 
 
 @SuppressLint("SuspiciousIndentation")

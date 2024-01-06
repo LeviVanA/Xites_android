@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "transaction")
+@Entity(tableName = "transaction_table")
 class TransactionEntity (
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0,

@@ -1,9 +1,9 @@
 package com.example.test_in_kotlin.network
 
-import com.example.test_in_kotlin.data.transactions.api.DienstData
+import com.example.test_in_kotlin.data.transactions.DienstData
 import com.example.test_in_kotlin.data.transactions.GetTransaction
-import com.example.test_in_kotlin.data.transactions.api.ProjectData
-import com.example.test_in_kotlin.data.transactions.api.TranactionData
+import com.example.test_in_kotlin.data.transactions.ProjectData
+import com.example.test_in_kotlin.data.transactions.TranactionData
 import com.example.test_in_kotlin.data.transactions.TransactionModel
 import retrofit2.Response
 import retrofit2.Retrofit

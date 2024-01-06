@@ -1,4 +1,4 @@
-package com.example.test_in_kotlin.data.transactions.api
+package com.example.test_in_kotlin.data.transactions
 
 sealed class Items {
     data class ProjectItem(

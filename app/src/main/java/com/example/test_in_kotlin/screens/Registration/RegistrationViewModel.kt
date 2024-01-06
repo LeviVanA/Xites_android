@@ -1,29 +1,26 @@
 package com.example.test_in_kotlin.screens.Registration
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.test_in_kotlin.MainApplication
-import com.example.test_in_kotlin.data.transactions.api.Items
+import com.example.test_in_kotlin.data.transactions.Items
 import com.example.test_in_kotlin.data.transactions.TransactionModel
 import com.example.test_in_kotlin.data.transactions.TransactionRepository
 import com.example.test_in_kotlin.data.transactions.local.ConnectionState
-import com.example.test_in_kotlin.data.transactions.local.TransactionEntity
 import com.example.test_in_kotlin.data.transactions.local.checkIfAnyCached
 import com.example.test_in_kotlin.data.transactions.local.getCurrentConnectivityState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class RegistrationViewModel(private val transactionsrepo: TransactionRepository) : ViewModel(){
@@ -92,7 +89,26 @@ class RegistrationViewModel(private val transactionsrepo: TransactionRepository)
                 Log.d("Xites_CACHE", "no cache or no network")
                 return@launch
             }
+            transactionsrepo.getAllItemsStream().first().map {
+                println(it)
+                val model = it
+                try {
+                    sendFromCache(model)
+                    transactionsrepo.clearLocalCache()
+//
+                } catch (e:Exception){
+                    // not good
+                    Log.d("Xites_CACHE", "err in sendFromCache")
+                }
 
+            }
+
+        }
+    }
+
+    fun sendFromCache(transaction: TransactionModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            transactionsrepo.sendtransaction(transaction)
         }
     }
     companion object {

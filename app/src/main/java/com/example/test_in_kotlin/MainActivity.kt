@@ -58,8 +58,6 @@ enum class Screen(@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App(navController: NavHostController = rememberNavController()){
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(backStackEntry?.destination?.route ?: Screen.Login.name)
 
     val toRegistratie = { navController.navigate(Screen.Registratie.name)}
     val toRegistraties = { navController.navigate(Screen.Registraties.name)}

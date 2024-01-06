@@ -3,15 +3,13 @@ package com.example.test_in_kotlin.screens.Registrations
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.test_in_kotlin.MainApplication
-import com.example.test_in_kotlin.data.transactions.api.Item
+import com.example.test_in_kotlin.data.transactions.Item
 import com.example.test_in_kotlin.data.transactions.TransactionRepository
 import kotlinx.coroutines.launch
 
@@ -42,7 +40,7 @@ class RegistrationsViewModel(private val transactionsrepo:TransactionRepository)
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MainApplication)
-                val transactionsRepository = application.transactionContainer.transactionRepository
+                val transactionsRepository = application.transactionContainer.offlineTransactionRepository
                 RegistrationsViewModel( transactionsrepo = transactionsRepository)
             }
         }
